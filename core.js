@@ -14,7 +14,7 @@ function create_a_b (a, b) {
 /**
  * proof of (A -> B) -> ((B -> C) -> (A -> C))
  */
-prop1 = (ab) => ((bc) => ((a) => (bc(ab(a)))))
+prf = (ab) => ((bc) => ((a) => (bc(ab(a)))))
 
 // the prop (A -> B) -> ((B -> C) -> (A -> C))
-((prop1(create_a_b('A', 'B')))(create_a_b('B', 'C')))("A") === "C" // -> True
+prop1 = (prf) => ((prf(create_a_b('A', 'B')))(create_a_b('B', 'C')))("A") === "C" // -> True
