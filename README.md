@@ -1,4 +1,4 @@
-<div style="test-align: center">
+<div style="text-align: center">
   <img src="tl.png">
 </div>
 
