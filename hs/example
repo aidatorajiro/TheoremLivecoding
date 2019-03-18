@@ -1,0 +1,20 @@
+forall :: Gaia (Prop a)
+
+>>= :: Gaia a -> (a -> Gaia b) -> Gaia b
+
+do $
+    a <- forall -- a :: Prop a
+    b <- forall -- b :: Prop b
+    c <- forall -- c :: Prop c
+    ab <- arrow a b -- ab :: Prop a :-> Prop b
+    bc <- arrow b c -- bc :: Prop b :-> Prop c
+    ac <- arrowP (\x -> do
+        b <- mp ab x
+        c <- mp bc b
+        return c
+    ) -- ac :: Truth (Prop a :-> Prop c)
+    return ac
+
+forall a b c. (a -> b) -> (b -> c) -> (a -> c)
+
+do $
