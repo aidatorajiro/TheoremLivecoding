@@ -16,7 +16,7 @@ cArrow _ _ = error "mismatch at cArrow"
 
 -- | destruction func for Forall
 dForall :: Proof -> Prop -> Proof
-dForall (Proof (Forall s p)) q = Proof (substitute s p q)
+dForall (Proof (Forall s p)) q = let Forall _ r = (replaceVar s p q) in Proof r
 dForall _ _ = error "mismatch at dForall"
 
 -- | construction func for Forall
@@ -26,11 +26,11 @@ cForall _ _ = error "mismatch at cForall"
 
 -- Utils
 
--- | Substitute `value` as `var` in `base`
-substitute :: String -> Prop -> Prop -> Prop
-substitute var base@(Var s) value = if var == s then value else base
-substitute var base@(Forall s p) value = Forall s (substitute var p value)
-substitute var base@(p :-> q) value = (substitute var p value) :-> (substitute var q value)
+-- | Replace `var` into `value` in `base`
+replaceVar :: String -> Prop -> Prop -> Prop
+replaceVar var base@(Var s) value = if var == s then value else base
+replaceVar var base@(Forall s p) value = Forall s (replaceVar var p value)
+replaceVar var base@(p :-> q) value = (replaceVar var p value) :-> (replaceVar var q value)
 
 -- | get corresponding Prop from Proof
 getProp :: Proof -> Prop
@@ -55,7 +55,8 @@ thm2 =
     )
 
 prf2 :: Proof
-prf2 = cForall thm2 (\p ->
+prf2 = 
+    cForall thm2 (\p ->
         cForall p (\q ->
             cForall q (\r ->
                 cArrow r (\ab bcac ->
@@ -68,3 +69,9 @@ prf2 = cForall thm2 (\p ->
             )
         )
     )
+
+thm3 :: Prop
+thm3 = Forall "a" (Var "a") :-> Forall "b" (Var "b")
+
+prf3 :: Proof
+prf3 = cArrow thm1 (\fa fb -> cForall fb (\b -> dForall fa b))
