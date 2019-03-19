@@ -32,9 +32,11 @@ substitute var base@(Var s) value = if var == s then value else base
 substitute var base@(Forall s p) value = Forall s (substitute var p value)
 substitute var base@(p :-> q) value = (substitute var p value) :-> (substitute var q value)
 
--- | 
+-- | get corresponding Prop from Proof
 getProp :: Proof -> Prop
 getProp (Proof p) = p
+
+-- !!! PROOF !!!
 
 thm1 :: Prop
 thm1 = Forall "a" (Var "a" :-> Var "a")
